@@ -64,9 +64,9 @@ public class MumayiApp extends TimerTask{
 		Mongo m;
 		try {
 			m = new Mongo(/*ServerAddressConfig.GetInstance().MongoDBAddress*/"10.27.129.70", /*ServerAddressConfig.GetInstance().MongoDBPort*/27017);
-			DB db = m.getDB("AndroidApp");
-			db.authenticate("Appimport", "Appimport".toCharArray());
-			appdata = db.getCollection("Mumayi");
+			DB db = m.getDB("DBName");
+			db.authenticate("user", "passwd".toCharArray());
+			appdata = db.getCollection("Collection");
 			if (!getIncrementData) {
 				if (appdata.count() > 0) {
 					appdata.drop();
@@ -82,7 +82,7 @@ public class MumayiApp extends TimerTask{
 				List<Element> itemele = childele.elements();
 				for (Element e : itemele) {
 					dataRec = new BasicDBObject();
-					// 全量包中，e对应item节点，通过visitor模式去遍历item下的每个节点，获取到每个app的全部信息
+					// 全量包中，e对应item节点，通过visitor模式去遍历item下的每个节点，
 					// 增量包中，e对应updated/delete/item等节点
 					e.accept(new MyVisitor());
 					switch (OperType) {
@@ -212,11 +212,10 @@ public class MumayiApp extends TimerTask{
 			//增量包获取地址、增量包名
 			String curDaynum = Data.year + Data.month + Data.day + "_" + Data.num;
 			URL = "http://localhost/" + Data.year
-					+ "/" + Data.month + "/" + Data.day + "/Data_increment_"
 					+ curDaynum + ".xml.gz";
-			fileName_gz = "Data_increment_" + curDaynum + ".xml.gz";
-			fileName_xml = "Data_increment_" + curDaynum + ".xml";
-			gzpath = "./data2/html/mayiapi_mumayi/bd/mumayi/data/mayi3/"
+			fileName_gz = curDaynum + ".xml.gz";
+			fileName_xml = + curDaynum + ".xml";
+			gzpath = "./data2/"
 					+ Data.year + "/" + Data.month + "/" + Data.day + "/"
 					+ fileName_gz;
 		} else {
@@ -225,9 +224,9 @@ public class MumayiApp extends TimerTask{
 			String curDay = sdf.format(nowDate);
 			URL = "http://localhost"
 					+ curDay + ".xml.gz";
-			fileName_gz = "Data_full_" + curDay + ".xml.gz";
-			fileName_xml = "Data_full_" + curDay + ".xml";
-			gzpath = "./data2/html/mayiapi_mumayi/bd/mumayi/data/mayi3/"
+			fileName_gz = curDay + ".xml.gz";
+			fileName_xml = curDay + ".xml";
+			gzpath = "./data2/"
 					+ fileName_gz;
 		}
 		System.out.println(fileName_xml);
@@ -247,8 +246,8 @@ public class MumayiApp extends TimerTask{
 			String unzipcmd = "\"d:/Program Files (x86)/7-Zip/7z.exe\" x "
 					+ fileName_gz + " -aoa";
 			// String rename =
-			// "ren ./data2/html/mayiapi_mumayi/bd/mumayi/data/mayi3/" +
-			// fileName + " Data_full_20130309.xml";
+			// "ren ./data2/" +
+			// fileName + " 123.xml";
 			Process process = Runtime.getRuntime().exec(unzipcmd);
 			if (0 != process.waitFor()) {
 				if (process.exitValue() == 1)
@@ -283,9 +282,9 @@ public class MumayiApp extends TimerTask{
 		Mongo m;
 		try {
 			m = new Mongo(/*ServerAddressConfig.GetInstance().MongoDBAddress*/"10.27.129.70", /*ServerAddressConfig.GetInstance().MongoDBPort*/27017);
-			DB db = m.getDB("AndroidApp");
-			db.authenticate("Appimport", "Appimport".toCharArray());
-			appdata = db.getCollection("Mumayi");
+			DB db = m.getDB("DBName");
+			db.authenticate("user", "passwd".toCharArray());
+			appdata = db.getCollection("Collection");
 			if (appdata.count() > 0) {
 				getIncrementData = true;
 			}
